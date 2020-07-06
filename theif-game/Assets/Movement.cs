@@ -10,6 +10,8 @@ public class Movement : MonoBehaviour
 
     void FixedUpdate()
     {
+        #region Mobile Swipe
+        if (Input.touches.Length > 0)
         foreach (Touch touch in Input.touches)
         {
             if (touch.phase == TouchPhase.Began)
@@ -41,5 +43,38 @@ public class Movement : MonoBehaviour
                 }
             }
         }
+        #endregion
+
+        //#region Desktop swipe
+                if (Input.GetMouseButtonDown(0))
+                {
+                    fp = Input.mousePosition;
+                    lp = Input.mousePosition;
+                     Debug.Log(fp);
+                }
+                if (Input.GetMouseButton(0))
+                {
+                    lp = Input.mousePosition;
+                }
+                if (Input.GetMouseButtonUp(0))
+                {
+                    if (fp.x > lp.x) // left swipe
+                    {
+                        Debug.Log("left swipe here...");
+                    }
+                    else if (fp.x < lp.x) // right swipe
+                    {
+                        Debug.Log("right swipe here...");
+                    }
+                    else if (fp.y > lp.y) // up swipe
+                    {
+                        Debug.Log("up swipe here...");
+                    }
+                    else if (fp.y < lp.y) // down swipe
+                    {
+                        Debug.Log("down swipe here...");
+                    }
+                }
+        //#endregion
     }
 }
