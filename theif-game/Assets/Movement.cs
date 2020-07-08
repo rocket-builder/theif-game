@@ -4,77 +4,55 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    public float sensetive = 0.5f;
 
-    private Vector2 fp; // first finger position
-    private Vector2 lp; // last finger position
+    Vector2 firstPressPos;
+    Vector2 secondPressPos;
+    Vector2 currentSwipe;
 
-    void FixedUpdate()
+    void Update()
     {
-        #region Mobile Swipe
-        if (Input.touches.Length > 0)
-        foreach (Touch touch in Input.touches)
+        Swipe();
+    }
+
+    public void Swipe()
+    {
+        if (Input.GetMouseButtonDown(0))
         {
-            if (touch.phase == TouchPhase.Began)
+            //save began touch 2d point
+            firstPressPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            //save ended touch 2d point
+            secondPressPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+
+            //create vector from the two points
+            currentSwipe = new Vector2(secondPressPos.x - firstPressPos.x, secondPressPos.y - firstPressPos.y);
+
+            //normalize the 2d vector
+            currentSwipe.Normalize();
+
+            //swipe upwards
+            if (currentSwipe.y > 0 && currentSwipe.x > -sensetive && currentSwipe.x < sensetive)
             {
-                fp = touch.position;
-                lp = touch.position;
+                Debug.Log("up swipe");
             }
-            if (touch.phase == TouchPhase.Moved)
+            //swipe down
+            if (currentSwipe.y < 0 && currentSwipe.x > -sensetive && currentSwipe.x < sensetive)
             {
-                lp = touch.position;
+                Debug.Log("down swipe");
             }
-            if (touch.phase == TouchPhase.Ended)
+            //swipe left
+            if (currentSwipe.x < 0 && currentSwipe.y > -sensetive && currentSwipe.y < sensetive)
             {
-                if ((fp.x - lp.x) > 80) // left swipe
-                {
-                    Debug.Log("left swipe here...");
-                }
-                else if ((fp.x - lp.x) < -80) // right swipe
-                {
-                    Debug.Log("right swipe here...");
-                }
-                else if ((fp.y - lp.y) < -80) // up swipe
-                {
-                    Debug.Log("up swipe here...");
-                }
-                else if ((fp.y - lp.y) > 80) // down swipe
-                {
-                    Debug.Log("down swipe here...");
-                }
+                Debug.Log("left swipe");
+            }
+            //swipe right
+            if (currentSwipe.x > 0 && currentSwipe.y > -sensetive && currentSwipe.y < sensetive)
+            {
+                Debug.Log("right swipe");
             }
         }
-        #endregion
-
-        //#region Desktop swipe
-                if (Input.GetMouseButtonDown(0))
-                {
-                    fp = Input.mousePosition;
-                    lp = Input.mousePosition;
-                     Debug.Log(fp);
-                }
-                if (Input.GetMouseButton(0))
-                {
-                    lp = Input.mousePosition;
-                }
-                if (Input.GetMouseButtonUp(0))
-                {
-                    if (fp.x > lp.x) // left swipe
-                    {
-                        Debug.Log("left swipe here...");
-                    }
-                    else if (fp.x < lp.x) // right swipe
-                    {
-                        Debug.Log("right swipe here...");
-                    }
-                    else if (fp.y > lp.y) // up swipe
-                    {
-                        Debug.Log("up swipe here...");
-                    }
-                    else if (fp.y < lp.y) // down swipe
-                    {
-                        Debug.Log("down swipe here...");
-                    }
-                }
-        //#endregion
     }
 }
